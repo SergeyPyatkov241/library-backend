@@ -1,5 +1,6 @@
 package ru.pyatkov.librarybackend.services;
 
+import ru.pyatkov.librarybackend.exceptions.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -8,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.pyatkov.librarybackend.models.Person;
 import ru.pyatkov.librarybackend.models.Book;
 import ru.pyatkov.librarybackend.repositories.BooksRepository;
-import ru.pyatkov.librarybackend.util.BookNotFoundException;
 
 import java.util.Date;
 import java.util.List;
@@ -34,7 +34,7 @@ public class BooksService {
 
     public Book findOne(int id) {
         Optional<Book> foundBook = booksRepository.findById(id);
-        return foundBook.orElseThrow(BookNotFoundException::new);
+        return foundBook.orElseThrow(() -> { throw new EntityNotFoundException("Книги с таким id не существует", "BooksService");});
     }
 
     @Transactional
@@ -44,7 +44,7 @@ public class BooksService {
 
     @Transactional
     public void update(int id, Book updatedBook) {
-        Book bookOwner = booksRepository.findById(id).get();
+        Book bookOwner = findOne(id);
         updatedBook.setId(id);
         updatedBook.setOwner(bookOwner.getOwner());
         booksRepository.save(updatedBook);
@@ -52,17 +52,19 @@ public class BooksService {
 
     @Transactional
     public void delete(int id) {
+        findOne(id);
         booksRepository.deleteById(id);
     }
 
     public Person getBookOwner(int id) {
-        return booksRepository.findById(id).map(Book::getOwner).orElse(null);
+        return booksRepository.findById(id).map(Book::getOwner).orElseThrow(
+                () -> { throw new EntityNotFoundException("Человека с таким id не существует", "BooksService");}
+        );
     }
 
     @Transactional
     public void release(int id) {
-        Optional<Book> foundBook = booksRepository.findById(id);
-        Book releaseBook = foundBook.get();
+        Book releaseBook = findOne(id);
         releaseBook.setOwner(null);
         releaseBook.setTakenAt(null);
         booksRepository.save(releaseBook);
@@ -84,7 +86,12 @@ public class BooksService {
     }
 
     public List<Book> findBooksByTitle(String searchQuery) {
-        return booksRepository.findByTitleStartingWith(searchQuery);
+        List<Book> foundBooks = booksRepository.findByTitleStartingWith(searchQuery);
+        if(!foundBooks.isEmpty()){
+            return foundBooks;
+        } else {
+            throw new EntityNotFoundException("По вашему запросу книг не найдено", "BooksService");
+        }
     }
 
 }

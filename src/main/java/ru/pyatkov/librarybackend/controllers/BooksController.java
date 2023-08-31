@@ -4,8 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import ru.pyatkov.librarybackend.dto.BookDTO;
 import ru.pyatkov.librarybackend.models.Book;
@@ -14,10 +12,6 @@ import ru.pyatkov.librarybackend.services.BooksService;
 import ru.pyatkov.librarybackend.services.PeopleService;
 
 import jakarta.validation.Valid;
-import ru.pyatkov.librarybackend.util.BookErrorResponse;
-import ru.pyatkov.librarybackend.util.BookNotCreatedException;
-import ru.pyatkov.librarybackend.util.BookNotFoundException;
-import ru.pyatkov.librarybackend.util.BookNotUpdatedException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,32 +51,13 @@ public class BooksController {
     }
 
     @PostMapping()
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid BookDTO bookDTO,
-                                             BindingResult bindingResult) {
-        if (bindingResult.hasErrors()){
-            StringBuilder errorMessage = new StringBuilder();
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessage.append(error.getField()).append(" - ").append(error.getDefaultMessage()).append("; ");
-            }
-            throw new BookNotCreatedException(errorMessage.toString());
-        }
-
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid BookDTO bookDTO) {
         booksService.save(convertToBook(bookDTO));
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<HttpStatus> update(@RequestBody @Valid BookDTO bookDTO, BindingResult bindingResult,
-                         @PathVariable("id") int id) {
-        if (bindingResult.hasErrors()) {
-            StringBuilder errorMessage = new StringBuilder();
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessage.append(error.getField()).append(" - ").append(error.getDefaultMessage()).append("; ");
-            }
-            throw new BookNotUpdatedException(errorMessage.toString());
-        }
+    public ResponseEntity<HttpStatus> update(@RequestBody @Valid BookDTO bookDTO, @PathVariable("id") int id) {
         booksService.update(id, convertToBook(bookDTO));
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -109,18 +84,6 @@ public class BooksController {
     @PostMapping("/search")
     public List<BookDTO> startSearch(@RequestParam("query") String searchQuery) {
         return booksService.findBooksByTitle(searchQuery).stream().map(this::convertToBookDTO).collect(Collectors.toList());
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<BookErrorResponse> handeException(BookNotFoundException e) {
-        BookErrorResponse response = new BookErrorResponse("Книга с этим id не найдена", System.currentTimeMillis());
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<BookErrorResponse> handeException(Exception e) {
-        BookErrorResponse response = new BookErrorResponse(e.getMessage(), System.currentTimeMillis());
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     private Book convertToBook(BookDTO bookDTO) {

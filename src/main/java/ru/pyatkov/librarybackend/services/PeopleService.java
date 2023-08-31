@@ -4,10 +4,11 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.pyatkov.librarybackend.exceptions.EntityNotCreatedException;
+import ru.pyatkov.librarybackend.exceptions.EntityNotFoundException;
 import ru.pyatkov.librarybackend.models.Person;
 import ru.pyatkov.librarybackend.models.Book;
 import ru.pyatkov.librarybackend.repositories.PeopleRepository;
-import ru.pyatkov.librarybackend.util.PersonNotFoundException;
 
 import java.util.Collections;
 import java.util.Date;
@@ -31,22 +32,26 @@ public class PeopleService {
 
     public Person findOne(int id) {
         Optional<Person> foundPerson = peopleRepository.findById(id);
-        return foundPerson.orElseThrow(PersonNotFoundException::new);
+        return foundPerson.orElseThrow(() -> { throw new EntityNotFoundException("Человека с таким id не существует", "PeopleService");});
     }
 
     @Transactional
     public void save(Person person) {
+        validateFullName(person.getFullName());
         peopleRepository.save(person);
     }
 
     @Transactional
     public void update(int id, Person updatedPerson) {
         updatedPerson.setId(id);
+        findOne(updatedPerson.getId());
+        validateFullName(updatedPerson.getFullName());
         peopleRepository.save(updatedPerson);
     }
 
     @Transactional
     public void delete(int id) {
+        findOne(id);
         peopleRepository.deleteById(id);
     }
 
@@ -72,4 +77,11 @@ public class PeopleService {
             return Collections.emptyList();
         }
     }
+
+    private void validateFullName(String fullName) {
+        if (findByFullName(fullName).isPresent()) {
+            throw new EntityNotCreatedException("Человек с таким ФИО уже существует", "PeopleService");
+        }
+    }
+
 }
