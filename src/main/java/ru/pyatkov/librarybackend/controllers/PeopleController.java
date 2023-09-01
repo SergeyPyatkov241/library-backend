@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.pyatkov.librarybackend.dto.PersonDTO;
+import ru.pyatkov.librarybackend.dto.response.GetPersonResponseDTO;
 import ru.pyatkov.librarybackend.models.Person;
 import ru.pyatkov.librarybackend.services.PeopleService;
 
@@ -29,12 +30,14 @@ public class PeopleController {
 
     @GetMapping()
     public List<PersonDTO> getPeople() {
-        return peopleService.findAll().stream().map(this::convertToPersonDTO).collect(Collectors.toList());
+        return peopleService.findAll().stream()
+                .map(person -> convertToDTO(person, PersonDTO.class))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public PersonDTO getPerson(@PathVariable("id") int id) {
-        return convertToPersonDTO(peopleService.findOne(id));
+    public GetPersonResponseDTO getPerson(@PathVariable("id") int id) {
+        return convertToDTO(peopleService.findOne(id), GetPersonResponseDTO.class);
 
     }
 
@@ -60,8 +63,8 @@ public class PeopleController {
         return modelMapper.map(personDTO, Person.class);
     }
 
-    private PersonDTO convertToPersonDTO(Person person) {
-        return modelMapper.map(person, PersonDTO.class);
+    private <T> T convertToDTO(Person person, Class<T> targetClass) {
+        return modelMapper.map(person, targetClass);
     }
 
 }

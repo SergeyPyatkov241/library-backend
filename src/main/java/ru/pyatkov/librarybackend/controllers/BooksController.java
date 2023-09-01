@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.pyatkov.librarybackend.dto.BookDTO;
+import ru.pyatkov.librarybackend.dto.response.GetBookResponseDTO;
 import ru.pyatkov.librarybackend.models.Book;
 import ru.pyatkov.librarybackend.models.Person;
 import ru.pyatkov.librarybackend.services.BooksService;
@@ -38,16 +39,19 @@ public class BooksController {
                             @RequestParam(value = "books_per_page", required = false) Integer booksPerPage,
                             @RequestParam(value = "sort_by_year", required = false) boolean sortByYear) {
         if(page == null || booksPerPage == null) {
-            return booksService.findAll(sortByYear).stream().map(this::convertToBookDTO).collect(Collectors.toList());
+            return booksService.findAll(sortByYear).stream()
+                    .map(book -> convertToDTO(book, BookDTO.class))
+                    .collect(Collectors.toList());
         } else {
-            return booksService.findAllWithPagination(page, booksPerPage, sortByYear)
-                    .stream().map(this::convertToBookDTO).collect(Collectors.toList());
+            return booksService.findAllWithPagination(page, booksPerPage, sortByYear).stream()
+                    .map(book -> convertToDTO(book, BookDTO.class))
+                    .collect(Collectors.toList());
         }
     }
 
     @GetMapping("/{id}")
-    public BookDTO getBook(@PathVariable("id") int id) {
-        return convertToBookDTO(booksService.findOne(id));
+    public GetBookResponseDTO getBook(@PathVariable("id") int id) {
+        return convertToDTO(booksService.findOne(id), GetBookResponseDTO.class);
     }
 
     @PostMapping()
@@ -83,15 +87,17 @@ public class BooksController {
 
     @PostMapping("/search")
     public List<BookDTO> startSearch(@RequestParam("query") String searchQuery) {
-        return booksService.findBooksByTitle(searchQuery).stream().map(this::convertToBookDTO).collect(Collectors.toList());
+        return booksService.findBooksByTitle(searchQuery).stream()
+                .map(book -> convertToDTO(book, BookDTO.class))
+                .collect(Collectors.toList());
     }
 
     private Book convertToBook(BookDTO bookDTO) {
         return modelMapper.map(bookDTO, Book.class);
     }
 
-    private BookDTO convertToBookDTO(Book book) {
-        return modelMapper.map(book, BookDTO.class);
+    private <T> T convertToDTO(Book book, Class<T> targetClass) {
+        return modelMapper.map(book, targetClass);
     }
 
 }
