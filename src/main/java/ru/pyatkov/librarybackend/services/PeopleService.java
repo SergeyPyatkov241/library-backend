@@ -1,5 +1,6 @@
 package ru.pyatkov.librarybackend.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class PeopleService {
@@ -27,36 +29,47 @@ public class PeopleService {
     }
 
     public List<Person> findAll() {
+        log.info("PeopleService.findAll entering");
         return peopleRepository.findAll();
     }
 
     public Person findOne(int id) {
+        log.info("PeopleService.findOne entering: args {}", id);
         Optional<Person> foundPerson = peopleRepository.findById(id);
-        return foundPerson.orElseThrow(() -> { throw new EntityNotFoundException("Человека с таким id не существует", "PeopleService");});
+        if(foundPerson.isPresent()) {
+            Person returnPerson = foundPerson.get();
+            log.info("PeopleService.findOne result: found person - '{}'", returnPerson);
+            return returnPerson;
+        } else {
+            log.error("PeopleService.findOne error: person with id = '{}' doesn't exists", id);
+            throw new EntityNotFoundException("Человека с таким id не существует", "PeopleService");
+        }
     }
 
     @Transactional
     public void save(Person person) {
+        log.info("PeopleService.save entering: args {}", person);
         validateFullName(person.getFullName());
         peopleRepository.save(person);
+        log.info("PeopleService.save result: created new person - '{}'", person);
     }
 
     @Transactional
     public void update(int id, Person updatedPerson) {
+        log.info("PeopleService.update entering: args {}, {}", id, updatedPerson);
         updatedPerson.setId(id);
         findOne(updatedPerson.getId());
         validateFullName(updatedPerson.getFullName());
         peopleRepository.save(updatedPerson);
+        log.info("PeopleService.update result: updated person - '{}'", updatedPerson);
     }
 
     @Transactional
     public void delete(int id) {
+        log.info("PeopleService.delete entering: args {}", id);
         findOne(id);
         peopleRepository.deleteById(id);
-    }
-
-    public Optional<Person> findByFullName(String fullName) {
-        return peopleRepository.findByFullName(fullName);
+        log.info("PeopleService.delete result: deleted person with id = '{}'", id);
     }
 
     public List<Book> getBooksByPersonId(int id) {
@@ -79,9 +92,18 @@ public class PeopleService {
     }
 
     private void validateFullName(String fullName) {
+        log.info("PeopleService.validateFullName entering: args {}", fullName);
         if (findByFullName(fullName).isPresent()) {
+            log.error("PeopleService.validateFullName: error -- person with fullName = '{}' already exist", fullName);
             throw new EntityNotCreatedException("Человек с таким ФИО уже существует", "PeopleService");
+        } else {
+            log.info("PeopleService.validateFullName result: OK, person with fullName = '{}' doesn't exist", fullName);
         }
+    }
+
+    public Optional<Person> findByFullName(String fullName) {
+        log.info("PeopleService.findByFullName entering: args {}", fullName);
+        return peopleRepository.findByFullName(fullName);
     }
 
 }

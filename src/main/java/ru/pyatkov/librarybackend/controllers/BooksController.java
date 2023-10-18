@@ -1,5 +1,6 @@
 package ru.pyatkov.librarybackend.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping("/books")
 public class BooksController {
@@ -38,6 +40,7 @@ public class BooksController {
     public List<BookDTO> getBooks(@RequestParam(value = "page", required = false) Integer page,
                             @RequestParam(value = "books_per_page", required = false) Integer booksPerPage,
                             @RequestParam(value = "sort_by_year", required = false) boolean sortByYear) {
+        log.info("Entering endpoint: /books");
         if(page == null || booksPerPage == null) {
             return booksService.findAll(sortByYear).stream()
                     .map(book -> convertToDTO(book, BookDTO.class))
@@ -51,35 +54,41 @@ public class BooksController {
 
     @GetMapping("/{id}")
     public GetBookResponseDTO getBook(@PathVariable("id") int id) {
+        log.info("Entering endpoint: /books/{}", id);
         return convertToDTO(booksService.findOne(id), GetBookResponseDTO.class);
     }
 
     @PostMapping()
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid BookDTO bookDTO) {
+        log.info("Entering endpoint: /books/create request - {}", bookDTO);
         booksService.save(convertToBook(bookDTO));
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<HttpStatus> update(@RequestBody @Valid BookDTO bookDTO, @PathVariable("id") int id) {
+        log.info("Entering endpoint: /books/{}  request - {}", id, bookDTO);
         booksService.update(id, convertToBook(bookDTO));
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
+        log.info("Entering endpoint: /books/{}", id);
         booksService.delete(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PatchMapping("/{id}/release")
     public ResponseEntity<HttpStatus> release(@PathVariable("id") int id) {
+        log.info("Entering endpoint: /books/{}/release", id);
         booksService.release(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PatchMapping("/{id}/assign")
     public ResponseEntity<HttpStatus> assign(@PathVariable("id") int id, @RequestParam("setOwnerId") int ownerId) {
+        log.info("Entering endpoint: /books/{}/assign?setOwnerId={}", id, ownerId);
         Person newOwner = peopleService.findOne(ownerId);
         booksService.assign(id, newOwner);
         return ResponseEntity.ok(HttpStatus.OK);
@@ -87,6 +96,7 @@ public class BooksController {
 
     @PostMapping("/search")
     public List<BookDTO> startSearch(@RequestParam("query") String searchQuery) {
+        log.info("Entering endpoint: /books/search?query={}", searchQuery);
         return booksService.findBooksByTitle(searchQuery).stream()
                 .map(book -> convertToDTO(book, BookDTO.class))
                 .collect(Collectors.toList());

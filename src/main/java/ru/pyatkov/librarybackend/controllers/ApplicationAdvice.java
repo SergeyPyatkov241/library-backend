@@ -1,5 +1,6 @@
 package ru.pyatkov.librarybackend.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
+@Slf4j
 public class ApplicationAdvice {
 
     @ExceptionHandler(EntityException.class)
@@ -23,6 +25,7 @@ public class ApplicationAdvice {
                 e.getMessage(),
                 e.getClassName(),
                 new Date());
+        log.error("Error message - '{}', error class - '{}'", e.getMessage(), e.getClassName());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -32,6 +35,7 @@ public class ApplicationAdvice {
                 .map(error -> new Violation(error.getField(), error.getDefaultMessage()))
                 .collect(Collectors.toList());
         ValidationErrorResponseDTO response = new ValidationErrorResponseDTO(violations);
+        log.error("Error message: '{}'", response.getViolations());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
