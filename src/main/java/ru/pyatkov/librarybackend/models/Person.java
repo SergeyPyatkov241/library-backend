@@ -4,16 +4,16 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @Table(name = "Person")
-@Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Data
 public class Person {
 
     @Id
@@ -34,4 +34,6 @@ public class Person {
     @OneToMany(mappedBy = "owner")
     private List<Book> books;
 
+    public Person(String fullName, int yearOfBirth) {
+    }
 }
