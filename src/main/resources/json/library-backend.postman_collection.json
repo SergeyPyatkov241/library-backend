@@ -13,13 +13,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/people",
+					"raw": "http://localhost:8080/api/people",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"people"
 					]
 				}
@@ -32,13 +33,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/people/1",
+					"raw": "http://localhost:8080/api/people/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"people",
 						"1"
 					]
@@ -52,13 +54,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/people/100",
+					"raw": "http://localhost:8080/api/people/100",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"people",
 						"100"
 					]
@@ -73,7 +76,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"fullName\": \"тест\",\r\n    \"yearOfBirth\": 1968\r\n}",
+					"raw": "{\r\n    \"fullName\": \"тест2\",\r\n    \"yearOfBirth\": 1968\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -81,13 +84,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/people",
+					"raw": "http://localhost:8080/api/people",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"people"
 					]
 				}
@@ -109,13 +113,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/people",
+					"raw": "http://localhost:8080/api/people",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"people"
 					]
 				}
@@ -129,7 +134,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"fullName\": \"тест4\",\r\n    \"yearOfBirth\": 1968\r\n}",
+					"raw": "{\r\n    \"fullName\": \"тестNew\",\r\n    \"yearOfBirth\": 2000\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -137,15 +142,16 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/people/6",
+					"raw": "http://localhost:8080/api/people/11",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"people",
-						"6"
+						"11"
 					]
 				}
 			},
@@ -158,7 +164,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"fullName\": \"тест2\",\r\n    \"yearOfBirth\": 1968\r\n}",
+					"raw": "{\r\n    \"fullName\": \"\",\r\n    \"yearOfBirth\": 0\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -166,15 +172,16 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/people/100",
+					"raw": "http://localhost:8080/api/people/7",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"people",
-						"100"
+						"7"
 					]
 				}
 			},
@@ -186,35 +193,16 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/people/6",
+					"raw": "http://localhost:8080/api/people/11",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"people",
-						"6"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "deletePerson Error",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/people/100",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"people",
-						"100"
+						"11"
 					]
 				}
 			},
@@ -226,13 +214,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/books",
+					"raw": "http://localhost:8080/api/books",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"books"
 					]
 				}
@@ -245,13 +234,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/books?page=1&books_per_page=3",
+					"raw": "http://localhost:8080/api/books?page=1&books_per_page=3",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"books"
 					],
 					"query": [
@@ -274,13 +264,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/books?sort_by_year=true",
+					"raw": "http://localhost:8080/api/books?sort_by_year=true",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"books"
 					],
 					"query": [
@@ -299,13 +290,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/books?page=1&books_per_page=3&sort_by_year=true",
+					"raw": "http://localhost:8080/api/books?page=1&books_per_page=3&sort_by_year=true",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"books"
 					],
 					"query": [
@@ -332,13 +324,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/books/1",
+					"raw": "http://localhost:8080/api/books/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"books",
 						"1"
 					]
@@ -352,13 +345,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/books/100",
+					"raw": "http://localhost:8080/api/books/100",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"books",
 						"100"
 					]
@@ -381,13 +375,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/books",
+					"raw": "http://localhost:8080/api/books",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"books"
 					]
 				}
@@ -409,13 +404,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/books",
+					"raw": "http://localhost:8080/api/books",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"books"
 					]
 				}
@@ -437,15 +433,16 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/books/9",
+					"raw": "http://localhost:8080/api/books/11",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"books",
-						"9"
+						"11"
 					]
 				}
 			},
@@ -466,13 +463,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/books/100",
+					"raw": "http://localhost:8080/api/books/100",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"books",
 						"100"
 					]
@@ -486,15 +484,16 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/books/9",
+					"raw": "http://localhost:8080/api/books/11",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"books",
-						"9"
+						"11"
 					]
 				}
 			},
@@ -506,13 +505,14 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/books/100",
+					"raw": "http://localhost:8080/api/books/100",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"books",
 						"100"
 					]
@@ -526,15 +526,16 @@
 				"method": "PATCH",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/books/2/assign?setOwnerId=1",
+					"raw": "http://localhost:8080/api/books/12/assign?setOwnerId=1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"books",
-						"2",
+						"12",
 						"assign"
 					],
 					"query": [
@@ -553,13 +554,14 @@
 				"method": "PATCH",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/books/2/assign?setOwnerId=100",
+					"raw": "http://localhost:8080/api/books/2/assign?setOwnerId=100",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"books",
 						"2",
 						"assign"
@@ -580,15 +582,16 @@
 				"method": "PATCH",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/books/2/release",
+					"raw": "http://localhost:8080/api/books/12/release",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"books",
-						"2",
+						"12",
 						"release"
 					]
 				}
@@ -601,13 +604,14 @@
 				"method": "PATCH",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/books/200/release",
+					"raw": "http://localhost:8080/api/books/200/release",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"books",
 						"200",
 						"release"
@@ -622,13 +626,14 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/books/search?query=Быт",
+					"raw": "http://localhost:8080/api/books/search?query=Быт",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"books",
 						"search"
 					],
@@ -648,13 +653,14 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/books/search?query=asda",
+					"raw": "http://localhost:8080/api/books/search?query=asda",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"books",
 						"search"
 					],
