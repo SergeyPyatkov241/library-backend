@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-@RequestMapping("/books")
+@RequestMapping("/api/books")
 public class BooksController {
 
     private final BooksService booksService;
@@ -37,69 +37,93 @@ public class BooksController {
     }
 
     @GetMapping()
-    public List<BookDTO> getBooks(@RequestParam(value = "page", required = false) Integer page,
+    public ResponseEntity<List<BookDTO>> getBooks(@RequestParam(value = "page", required = false) Integer page,
                             @RequestParam(value = "books_per_page", required = false) Integer booksPerPage,
                             @RequestParam(value = "sort_by_year", required = false) boolean sortByYear) {
         log.info("Entering endpoint: /books");
         if(page == null || booksPerPage == null) {
-            return booksService.findAll(sortByYear).stream()
+            List<BookDTO> response = booksService.findAll(sortByYear).stream()
                     .map(book -> convertToDTO(book, BookDTO.class))
                     .collect(Collectors.toList());
+            ResponseEntity<List<BookDTO>> responseEntity = ResponseEntity.ok(response);
+            log.info("Endpoint: /books return result without pagination");
+            return responseEntity;
         } else {
-            return booksService.findAllWithPagination(page, booksPerPage, sortByYear).stream()
+            List<BookDTO> response = booksService.findAllWithPagination(page, booksPerPage, sortByYear).stream()
                     .map(book -> convertToDTO(book, BookDTO.class))
                     .collect(Collectors.toList());
+            ResponseEntity<List<BookDTO>> responseEntity = ResponseEntity.ok(response);
+            log.info("Endpoint: /books return result with pagination");
+            return responseEntity;
         }
     }
 
     @GetMapping("/{id}")
-    public GetBookResponseDTO getBook(@PathVariable("id") int id) {
+    public ResponseEntity<GetBookResponseDTO> getBook(@PathVariable("id") int id) {
         log.info("Entering endpoint: /books/{}", id);
-        return convertToDTO(booksService.findOne(id), GetBookResponseDTO.class);
+        GetBookResponseDTO response = convertToDTO(booksService.findOne(id), GetBookResponseDTO.class);
+        ResponseEntity<GetBookResponseDTO> responseEntity = ResponseEntity.ok(response);
+        log.info("Endpoint: /books/{} return result - {}", id, responseEntity);
+        return responseEntity;
     }
 
     @PostMapping()
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid BookDTO bookDTO) {
-        log.info("Entering endpoint: /books/create request - {}", bookDTO);
+    public ResponseEntity<BookDTO> createBook(@RequestBody @Valid BookDTO bookDTO) {
+        log.info("Entering endpoint: /books request - {}", bookDTO);
         booksService.save(convertToBook(bookDTO));
-        return ResponseEntity.ok(HttpStatus.OK);
+        ResponseEntity<BookDTO> responseEntity = ResponseEntity.ok(bookDTO);
+        log.info("Endpoint: /books return result - {}", responseEntity);
+        return responseEntity;
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<HttpStatus> update(@RequestBody @Valid BookDTO bookDTO, @PathVariable("id") int id) {
+    public ResponseEntity<BookDTO> updateBook(@RequestBody @Valid BookDTO bookDTO, @PathVariable("id") int id) {
         log.info("Entering endpoint: /books/{}  request - {}", id, bookDTO);
         booksService.update(id, convertToBook(bookDTO));
-        return ResponseEntity.ok(HttpStatus.OK);
+        ResponseEntity<BookDTO> responseEntity = ResponseEntity.ok(bookDTO);
+        log.info("Endpoint: /books/{} return result - {}", id, responseEntity);
+        return responseEntity;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
+    public ResponseEntity<?> deleteBook(@PathVariable("id") int id) {
         log.info("Entering endpoint: /books/{}", id);
         booksService.delete(id);
-        return ResponseEntity.ok(HttpStatus.OK);
-    }
-
-    @PatchMapping("/{id}/release")
-    public ResponseEntity<HttpStatus> release(@PathVariable("id") int id) {
-        log.info("Entering endpoint: /books/{}/release", id);
-        booksService.release(id);
-        return ResponseEntity.ok(HttpStatus.OK);
+        ResponseEntity<?> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        log.info("Endpoint: /books/{} return result - {}", id, responseEntity);
+        return responseEntity;
     }
 
     @PatchMapping("/{id}/assign")
-    public ResponseEntity<HttpStatus> assign(@PathVariable("id") int id, @RequestParam("setOwnerId") int ownerId) {
+    public ResponseEntity<GetBookResponseDTO> assignBook(@PathVariable("id") int id, @RequestParam("setOwnerId") int ownerId) {
         log.info("Entering endpoint: /books/{}/assign?setOwnerId={}", id, ownerId);
         Person newOwner = peopleService.findOne(ownerId);
         booksService.assign(id, newOwner);
-        return ResponseEntity.ok(HttpStatus.OK);
+        GetBookResponseDTO response = convertToDTO(booksService.findOne(id), GetBookResponseDTO.class);
+        ResponseEntity<GetBookResponseDTO> responseEntity = ResponseEntity.ok(response);
+        log.info("Endpoint: /books/{}/assign?setOwnerId={} return result - {}", id, ownerId, responseEntity);
+        return responseEntity;
+    }
+
+    @PatchMapping("/{id}/release")
+    public ResponseEntity<GetBookResponseDTO> releaseBook(@PathVariable("id") int id) {
+        log.info("Entering endpoint: /books/{}/release", id);
+        booksService.release(id);
+        GetBookResponseDTO response = convertToDTO(booksService.findOne(id), GetBookResponseDTO.class);
+        ResponseEntity<GetBookResponseDTO> responseEntity = ResponseEntity.ok(response);
+        log.info("Endpoint: /books/{}/release return result - {}", id, responseEntity);
+        return responseEntity;
     }
 
     @PostMapping("/search")
-    public List<BookDTO> startSearch(@RequestParam("query") String searchQuery) {
+    public ResponseEntity<List<BookDTO>> startSearchBook(@RequestParam("query") String searchQuery) {
         log.info("Entering endpoint: /books/search?query={}", searchQuery);
-        return booksService.findBooksByTitle(searchQuery).stream()
+        List<BookDTO> response = booksService.findBooksByTitle(searchQuery).stream()
                 .map(book -> convertToDTO(book, BookDTO.class))
                 .collect(Collectors.toList());
+        ResponseEntity<List<BookDTO>> responseEntity = ResponseEntity.ok(response);
+        log.info("Endpoint: /books/search return result");
+        return responseEntity;
     }
 
     private Book convertToBook(BookDTO bookDTO) {

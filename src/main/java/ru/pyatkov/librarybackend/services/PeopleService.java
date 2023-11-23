@@ -67,7 +67,6 @@ public class PeopleService {
     @Transactional
     public void delete(int id) {
         log.info("PeopleService.delete entering: args {}", id);
-        findOne(id);
         peopleRepository.deleteById(id);
         log.info("PeopleService.delete result: deleted person with id = '{}'", id);
     }

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-@RequestMapping("/people")
+@RequestMapping("/api/people")
 public class PeopleController {
 
     private final PeopleService peopleService;
@@ -31,39 +31,50 @@ public class PeopleController {
     }
 
     @GetMapping()
-    public List<PersonDTO> getPeople() {
+    public ResponseEntity<List<PersonDTO>> getPeople() {
         log.info("Entering endpoint: /people");
-        return peopleService.findAll().stream()
+        List<PersonDTO> response = peopleService.findAll().stream()
                 .map(person -> convertToDTO(person, PersonDTO.class))
                 .collect(Collectors.toList());
+        ResponseEntity<List<PersonDTO>> responseEntity = ResponseEntity.ok(response);
+        log.info("Endpoint: /people return result");
+        return responseEntity;
     }
 
     @GetMapping("/{id}")
-    public GetPersonResponseDTO getPerson(@PathVariable("id") int id) {
+    public ResponseEntity<GetPersonResponseDTO> getPerson(@PathVariable("id") int id) {
         log.info("Entering endpoint: /people/{}", id);
-        return convertToDTO(peopleService.findOne(id), GetPersonResponseDTO.class);
-
+        GetPersonResponseDTO response = convertToDTO(peopleService.findOne(id), GetPersonResponseDTO.class);
+        ResponseEntity<GetPersonResponseDTO> responseEntity = ResponseEntity.ok(response);
+        log.info("Endpoint: /people/{} return result - {}", id, responseEntity);
+        return responseEntity;
     }
 
     @PostMapping()
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid PersonDTO personDTO) {
-        log.info("Entering endpoint: /people/create request - {}", personDTO);
+    public ResponseEntity<PersonDTO> createPerson(@RequestBody @Valid PersonDTO personDTO) {
+        log.info("Entering endpoint: /people request - {}", personDTO);
         peopleService.save(convertToPerson(personDTO));
-        return ResponseEntity.ok(HttpStatus.OK);
+        ResponseEntity<PersonDTO> responseEntity = ResponseEntity.ok(personDTO);
+        log.info("Endpoint: /people return result - {}", responseEntity);
+        return responseEntity;
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<HttpStatus> update(@RequestBody @Valid PersonDTO personDTO, @PathVariable("id") int id) {
+    public ResponseEntity<PersonDTO> updatePerson(@RequestBody @Valid PersonDTO personDTO, @PathVariable("id") int id) {
         log.info("Entering endpoint: /people/{} request - {}", id, personDTO);
         peopleService.update(id, convertToPerson(personDTO));
-        return ResponseEntity.ok(HttpStatus.OK);
+        ResponseEntity<PersonDTO> responseEntity = ResponseEntity.ok(personDTO);
+        log.info("Endpoint: /people/{} return result - {}", id, responseEntity);
+        return responseEntity;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
+    public ResponseEntity<?> deletePerson(@PathVariable("id") int id) {
         log.info("Entering endpoint: /people/{}", id);
         peopleService.delete(id);
-        return ResponseEntity.ok(HttpStatus.OK);
+        ResponseEntity<?> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        log.info("Endpoint: /people/{} return result - {}", id, responseEntity);
+        return responseEntity;
     }
 
     private Person convertToPerson(PersonDTO personDTO) {

@@ -72,7 +72,6 @@ public class BooksService {
     @Transactional
     public void delete(int id) {
         log.info("BooksService.delete entering: args {}", id);
-        findOne(id);
         booksRepository.deleteById(id);
         log.info("BooksService.delete result: deleted book with id = '{}'", id);
     }
