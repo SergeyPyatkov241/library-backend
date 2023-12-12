@@ -34,4 +34,10 @@ public class Person {
     @OneToMany(mappedBy = "owner")
     private List<Book> books;
 
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "password")
+    private String password;
+
 }

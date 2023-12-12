@@ -24,3 +24,10 @@ insert into book (title, author, year) VALUES ('Тайные виды на го�
 insert into book (title, author, year) VALUES ('Над пропастью во ржи', 'Джером Сэллинджер', 1951);
 insert into book (title, author, year) VALUES ('Психология обыденной жизни', 'Фрейд Зигмунд', 1904);
 insert into book (title, author, year) VALUES ('День опричника', 'Владимир Сорокин', 2006);
+
+ALTER Table Person ADD COLUMN username varchar(100);
+ALTER Table Person ADD COLUMN password text;
+
+UPDATE Person SET username = 'ivan', password = 123 WHERE full_name='Иванов Иван Иванович';
+UPDATE Person SET username = 'petr', password = 245 WHERE full_name='Петров Петр Петрович';
+UPDATE Person SET username = 'oleg', password = 789 WHERE full_name='Олегов Олег Олегович';

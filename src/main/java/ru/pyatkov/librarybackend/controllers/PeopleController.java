@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.pyatkov.librarybackend.dto.PersonDTO;
 import ru.pyatkov.librarybackend.dto.response.GetPersonResponseDTO;
 import ru.pyatkov.librarybackend.models.Person;
+import ru.pyatkov.librarybackend.security.PersonDetails;
 import ru.pyatkov.librarybackend.services.PeopleService;
 
 import java.util.List;

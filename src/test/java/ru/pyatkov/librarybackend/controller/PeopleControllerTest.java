@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import ru.pyatkov.librarybackend.controllers.PeopleController;
 import ru.pyatkov.librarybackend.dto.PersonDTO;
 import ru.pyatkov.librarybackend.models.Person;
+import ru.pyatkov.librarybackend.security.PersonDetails;
 import ru.pyatkov.librarybackend.services.PeopleService;
 
 import java.util.List;
@@ -37,6 +38,9 @@ public class PeopleControllerTest {
     @DisplayName("GET /people возвращает список задач")
     void getPeople_returnsValidData() {
         // given
+        Person person = Person.builder().username("user1").password("password1").build();
+        PersonDetails user = new PersonDetails(person);
+
         List<Person> people = List.of(Person.builder().fullName("Person 1").yearOfBirth(25).build(),
                 Person.builder().fullName("Person 2").yearOfBirth(30).build());
         doReturn(people).when(peopleService).findAll();
