@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <preConditions>
+        <dbms type="postgresql"/>
+    </preConditions>
+
+    <changeSet id="book" author="postgres">
+        <createTable tableName="book">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="title" type="VARCHAR(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="author" type="VARCHAR(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="year" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="person_id" type="INT" />
+            <column name="taken_at" type="TIMESTAMP" />
+        </createTable>
+        <addForeignKeyConstraint baseTableName="book"
+                                 baseColumnNames="person_id"
+                                 constraintName="book_person_id_fkey"
+                                 referencedTableName="person"
+                                 referencedColumnNames="id"
+                                 onUpdate="NO ACTION"
+                                 onDelete="SET NULL" />
+    </changeSet>
+</databaseChangeLog>
