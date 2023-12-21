@@ -6,29 +6,30 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "${APP_PORT:-8080}:${APP_PORT:-8080}"
     depends_on:
       - db
     environment:
       - SERVER_PORT=${APP_PORT:-8080}
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db/
-      - DB_USER=postgres
-      - DB_PASS=12345
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db/${PG_USER:-postgres}
+      - DB_USER=${PG_USER:-postgres}
+      - DB_PASS=${PG_PASS:-12345}
+      - APP_LOG_LEVEL=${APP_LOG_LEVEL:-DEBUG}
     restart: unless-stopped
 
   db:
     image: postgres:14.7-alpine
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 12345
+      POSTGRES_USER: ${PG_USER:-postgres}
+      POSTGRES_PASSWORD: ${PG_PASS:-12345}
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5433}:5432"
     volumes:
       - db-postgres:/var/lib/postgresql/data
     restart: unless-stopped
 
   pgadmin:
-    container_name: pgadmin4_container
+    container_name: pgadmin4_container_library
     image: dpage/pgadmin4:7
     restart: unless-stopped
     environment:
@@ -42,14 +43,4 @@ services:
 
 volumes:
   db-postgres:
-    driver: local
-    driver_opts:
-      type: volume
-      o: bind
-      device: /home/vitaliy/test/db
   pgadmin-data:
-    driver: local
-    driver_opts:
-      type: volume
-      o: bind
-      device: /home/vitaliy/test/pgadmin-data
