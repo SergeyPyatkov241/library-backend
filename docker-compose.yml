@@ -13,7 +13,7 @@ services:
       - SERVER_PORT=${APP_PORT:-8080}
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db/${PG_USER:-postgres}
       - DB_USER=${PG_USER:-postgres}
-      - DB_PASS=${PG_PASS:-12345}
+      - DB_PASS=${PG_PASS:-postgres}
       - APP_LOG_LEVEL=${APP_LOG_LEVEL:-DEBUG}
     restart: unless-stopped
 
@@ -21,7 +21,7 @@ services:
     image: postgres:14.7-alpine
     environment:
       POSTGRES_USER: ${PG_USER:-postgres}
-      POSTGRES_PASSWORD: ${PG_PASS:-12345}
+      POSTGRES_PASSWORD: ${PG_PASS:-postgres}
     ports:
       - "${DB_PORT:-5433}:5432"
     volumes:

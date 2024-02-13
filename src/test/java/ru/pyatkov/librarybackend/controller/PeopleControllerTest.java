@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import ru.pyatkov.librarybackend.controllers.PeopleController;
 import ru.pyatkov.librarybackend.dto.PersonDTO;
@@ -20,7 +19,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class PeopleControllerTest {
@@ -35,7 +33,7 @@ public class PeopleControllerTest {
     PeopleController peopleController;
 
     @Test
-    @DisplayName("GET /people возвращает список задач")
+    @DisplayName("GET /people returns a list of people")
     void getPeople_returnsValidData() {
         // given
         Person person = Person.builder().username("user1").password("password1").build();

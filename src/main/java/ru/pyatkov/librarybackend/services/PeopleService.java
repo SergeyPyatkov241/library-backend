@@ -42,7 +42,7 @@ public class PeopleService {
             return returnPerson;
         } else {
             log.error("PeopleService.findOne error: person with id = '{}' doesn't exists", id);
-            throw new EntityNotFoundException("Человека с таким id не существует", "PeopleService");
+            throw new EntityNotFoundException("Person with this id doesn't exists", "PeopleService");
         }
     }
 
@@ -94,7 +94,7 @@ public class PeopleService {
         log.info("PeopleService.validateFullName entering: args {}", fullName);
         if (findByFullName(fullName).isPresent()) {
             log.error("PeopleService.validateFullName: error -- person with fullName = '{}' already exist", fullName);
-            throw new EntityNotCreatedException("Человек с таким ФИО уже существует", "PeopleService");
+            throw new EntityNotCreatedException("Person with this fullName already exist", "PeopleService");
         } else {
             log.info("PeopleService.validateFullName result: OK, person with fullName = '{}' doesn't exist", fullName);
         }

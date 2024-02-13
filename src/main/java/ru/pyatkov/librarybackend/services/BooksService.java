@@ -48,7 +48,7 @@ public class BooksService {
             return returnBook;
         } else {
             log.error("BooksService.findOne error: book with id = '{}' doesn't exists", id);
-            throw new EntityNotFoundException("Книги с таким id не существует", "BooksService");
+            throw new EntityNotFoundException("Book with this id doesn't exists", "BooksService");
         }
     }
 
@@ -56,7 +56,7 @@ public class BooksService {
     public void save(Book book) {
         log.info("BooksService.save entering: args {}", book);
         booksRepository.save(book);
-        log.info("BooksService.save result: сreated new book - '{}'", book);
+        log.info("BooksService.save result: created new book - '{}'", book);
     }
 
     @Transactional
@@ -76,11 +76,11 @@ public class BooksService {
         log.info("BooksService.delete result: deleted book with id = '{}'", id);
     }
 
-    public Person getBookOwner(int id) {
-        return booksRepository.findById(id).map(Book::getOwner).orElseThrow(
-                () -> { throw new EntityNotFoundException("Человека с таким id не существует", "BooksService");}
-        );
-    }
+//    public Person getBookOwner(int id) {
+//        return booksRepository.findById(id).map(Book::getOwner).orElseThrow(
+//                () -> { throw new EntityNotFoundException("Человека с таким id не существует", "BooksService");}
+//        );
+//    }
 
     @Transactional
     public void release(int id) {
@@ -122,7 +122,7 @@ public class BooksService {
             return foundBooks;
         } else {
             log.error("BooksService.findBooksByTitle error: no books were found for search - '{}'", searchQuery);
-            throw new EntityNotFoundException("По вашему запросу книг не найдено", "BooksService");
+            throw new EntityNotFoundException("No books were found for your search", "BooksService");
         }
     }
 
